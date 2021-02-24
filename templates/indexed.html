@@ -1,0 +1,57 @@
+dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: 'Print all',
+                        exportOptions: {
+                            modifier: {
+                                selected: null
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print selected'
+                    }
+                ],
+                select: true,       
+
+
+
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api();
+                    api.columns(6, {
+                        page: 'current'
+                    }).every(function() {
+                        var sum = this
+                        .nodes()
+                        .reduce(function(a, b) {
+                        var x = parseFloat(a) || 0;
+                        var y = parseFloat($(b).attr('data-sort')) || 0;
+                        return x + y;
+                        }, 0);
+                        $(this.footer()).html(sum);
+                    });
+                    }         
+
+
+//// working code for datatables
+$(document).ready( function () {
+    var table = $('#myexample').DataTable({                         
+        "footerCallback": function(row, data, start, end, display) {
+            var api = this.api();
+            api.columns(6, {
+                page: 'current'
+            }).every(function() {
+                var sum = this
+                .nodes()
+                .reduce(function(a, b) {
+                var x = parseFloat(a) || 0;
+                var y = parseFloat($(b).attr('data-sort')) || 0;
+                return x + y;
+                }, 0);
+                $(this.footer()).html(sum);
+            });
+            }         
+    });
+}); 

@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %} 
+<main class="page landing-page">
+    <div class="row justify-content-center"> 
+        <div class="col-sm-8">
+            <form action="{{url_for('filter')}}" method="POST" autocomplete="off">   
+                <input autocomplete="false" name="hidden" type="text" style="display:none;">              
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <input type="date" name="fm_date" id="fm_date" 
+                        class="form-control datepicker" placeholder="Start Date" date-format="MM-DD-YYYY" required >                            
+                    </div>
+                    <div class="col-md-3">
+                       <input type="date" name="to_date" id="to_date" 
+                        class="form-control datepicker" placeholder="End Date" date-format="MM-DD-YYYY" required >                            
+                    </div> 
+                    <div class="col-md-3">
+                        <input type="submit" class="btn btn-success" value="Filter Between Dates">   
+                    </div>                       
+                </div>                        
+            </form>
+            </div><div class="col-sm-2">
+            <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">
+            Add Schedule</button>  
+        </div>
+    </div>  
+    
+    <div class="row justify-content-center"> 
+        <div class="col-11">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span area-hidden="ture">x</span>
+                    </button>
+                    {{message}}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+                <hr>
+                <table id="myexample" class="table table-hover table-dark table-bordered display nowrap" cellspacing="0">         
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Date VC</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>  
+                            <th>Total Minute</th>                  
+                            <th>Server</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>         
+                       
+                        {% for row in schedules %}      
+                        <tr>
+                            <td class="text-center">{{loop.index}}</td>
+                            <td>{{row.vc_date_}}</td>
+                            <td>{{row.from_stn_}}</td>
+                            <td>{{row.to_stn_}}</td>
+                            <td>{{row.from_time_}}</td>
+                            <td>{{row.to_time_}}</td>
+                            <td data-sort="{{row.hours}}">{{row.hours}}</td>
+                            <td>{{row.server_}}</td>
+                            <td>{{row.status_}}</td>       
+                                           
+                            <td><a href="/update/{{row.id}}" class="btn btn-sm btn-warning py-0" data-toggle="modal" data-target="#modaledit{{row.id}}" style="font-size: 0.9em;">Edit</a>
+                                <a href="/delete/{{row.id}}" class="btn btn-sm btn-danger py-0" onclick="return confirm('Are you sure to delete?')" style="font-size: 0.9em;">Delete</a></td>
+                        </tr>  
+                        <div class="modal fade" id="modaledit{{row.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Update Schedule</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('update')}}" method="POST">  
+                                            <input type="hidden" name="id" value="{{row.id}}">                  
+                                            <div class="form-group"><label for="name">VC Date</label>
+                                                <input class="form-control" type="date" id="vc-date" name="vc_date" date-format="MM-DD-YYYY" 
+                                                required="required" value="{{row.vc_date_}}">
+                                            </div>
+                                            <div class="form-group"><label for="subject">From Stn</label>
+                                                <input class="form-control item" type="text" name="from_stn" id="from_stn" 
+                                                required="required" value="{{row.from_stn_}}">
+                                            </div>
+                                            <div class="form-group"><label for="email">To Stn</label>
+                                                <input class="form-control item" type="text" name="to_stn" id="to_stn" 
+                                                required="required" value="{{row.to_stn_}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-row">
+                                                    <div class="col-md-6">
+                                                        <label for="input_starttime">Time Fm</label>
+                                                        <input type="time" name="from_time" id="from_time" 
+                                                        class="form-control timepicker" value="{{row.from_time_}}">                            
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="input_starttime">Time To</label>
+                                                        <input type="time" name="to_time" id="to_time" 
+                                                        class="form-control timepicker" value="{{row.to_time_}}">                            
+                                                    </div>                        
+                                                </div>
+                                            </div>         
+                                            <div class="form-group">
+                                                <div class="form-row">
+                                                    <div class="col-md-6">
+                                                        <label for="server_type">VC Server</label>
+                                                        <select class="form-control" id="server_type" name="server_type">
+                                                            <option value="{{row.server_}}" selected="">{{row.server_}}</option>
+                                                            <option value="AVAYA">AVAYA</option>
+                                                            <option value="UTP Plus Delhi">UTP Plus Delhi</option>
+                                                            <option value="UTP Plus Udhampur">UTP Plus Udhampur</option>
+                                                            <option value="Nextcloud">Nextcloud</option>
+                                                            <option value="Others">Others</option>
+                                                            <option value="Internet">Internet</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="status">Status</label>
+                                                        <select class="form-control" id="status" name="status">
+                                                            <option value="{{row.status_}}" selected="">{{row.status_}}</option>
+                                                            <option value="Done">Done</option>
+                                                            <option value="Cancelled">Cancelled</option>
+                                                            <option value="Rescheduled">Rescheduled</option>
+                                                        </select>
+                                                    </div>                    
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary btn-block btn-lg" type="submit">Update Schedule</button>
+                                            </div>
+                                        </form>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>   
+                        {% endfor %}       
+                        <tfoot>
+                        <tr><th>ID</th>
+                            <th>Date VC</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Total Minute</th>
+                            <!-- {{ schedules | sum(attribute='hours') }} -->
+                            <th>Server</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>                      
+                    </tbody>         
+                </table>   
+            
+        
+        </div>
+    </div>  
+
+        <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Schedule</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{url_for('success')}}" method="POST" autocomplete="off">       
+                            <input autocomplete="false" name="hidden" type="text" style="display:none;">             
+                            <div class="form-group"><label for="name">VC Date</label>
+                                <input class="form-control" type="date" id="vc-date" name="vc_date" required="required">
+                            </div>
+                            <div class="form-group"><label for="subject">From Stn</label>
+                                <input class="form-control item" type="text" name="from_stn" id="from_stn" required="required">
+                            </div>
+                            <div class="form-group"><label for="email">To Stn</label>
+                                <input class="form-control item" type="text" name="to_stn" id="to_stn" required="required">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="input_starttime">Time Fm</label>
+                                        <input type="time" name="from_time" id="from_time" class="form-control timepicker">                            
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="input_starttime">Time To</label>
+                                        <input type="time" name="to_time" id="to_time" class="form-control timepicker">                            
+                                    </div>                        
+                                </div>
+                            </div>         
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="server_type">VC Server</label>
+                                        <select class="form-control" id="server_type" name="server_type">
+                                            <option value="" selected="">Choose Server</option>
+                                            <option value="AVAYA">AVAYA</option>
+                                            <option value="UTP Plus Delhi">UTP Plus Delhi</option>
+                                            <option value="UTP Plus Udhampur">UTP Plus Udhampur</option>
+                                            <option value="Nextcloud">Nextcloud</option>
+                                            <option value="Others">Others</option>
+                                            <option value="Internet">Internet</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="status">Status</label>
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="" selected="">Scheduled</option>
+                                            <option value="Done">Done</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                            <option value="Rescheduled">Rescheduled</option>
+                                        </select>
+                                    </div>                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary btn-block btn-lg" type="submit">Submit Schedule</button>
+                            </div>
+                        </form>
+                    </div>     
+                
+                </div>
+            </div> 
+        </div>   
+
+  
+{% endblock %}

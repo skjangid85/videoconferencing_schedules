@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %} Add Schedule {% endblock %}
+
+{% block body %} 
+<main class="page contact-page">
+    <section class="portfolio-block contact">
+        <div class="container">                
+            <form action="{{url_for('success')}}" method="POST">
+                <div class="form-group text-center">
+                    <h2>Add Schedule</h2>
+                </div>
+                <div class="form-group"><label for="name">VC Date</label>
+                    <input class="form-control datepicker" type="text" id="vc-date" name="vc_date" date-format="MM-DD-YYYY" required="required">
+                </div>
+                <div class="form-group"><label for="subject">From Stn</label>
+                    <input class="form-control item" type="text" name="from_stn" id="from_stn" required="required">
+                </div>
+                <div class="form-group"><label for="email">To Stn</label>
+                    <input class="form-control item" type="text" name="to_stn" id="to_stn" required="required">
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="input_starttime">Time Fm</label>
+                            <input placeholder="HHMM" type="text" name="from_time" id="from_time" class="form-control timepicker">                            
+                        </div>
+                        <div class="col-md-6">
+                            <label for="input_starttime">Time To</label>
+                            <input placeholder="HHMM" type="text" name="to_time" id="to_time" class="form-control timepicker">                            
+                        </div>                        
+                    </div>
+                </div>         
+                <div class="form-group">
+                    <label for="server_type">VC Server</label>
+                    <select class="form-control" id="server_type" name="server_type">
+                        <option value="" selected="">Choose Server</option>
+                        <option value="1">AVAYA</option>
+                        <option value="2">UTP Plus Delhi</option>
+                        <option value="3">UTP Plus Udhampur</option>
+                        <option value="4">UTP Plus Other</option>
+                        <option value="5">INTERNET</option>
+                    </select>
+                </div> 
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="" selected="">Choose Status</option>
+                        <option value="1">Done</option>
+                        <option value="2">Cancelled</option>
+                        <option value="3">Rescheduled</option>
+                    </select>
+                </div>                            
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block btn-lg" type="submit">Submit Schedule</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock %}

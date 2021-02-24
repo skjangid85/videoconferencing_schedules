@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This site is disigned using bootstrap studio">
+    <title>{% block title %}  {% endblock %}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='https://fonts.googleapis.com/css?family=Lato:300,400,700')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/fonts/ionicons.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/dataTables/datatables.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/dataTables/buttons.datatables.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/dataTables/jquery.ui.css')}}">
+
+</head>
+<script type="text/javascript">
+  $(function(){
+      $('.datepicker #vc-date').datepicker({
+          'format':'yyyy-mm-dd',
+          'autoclose':true
+      })
+  })
+</script>
+<body>
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient">
+        <div class="container"><a class="navbar-brand logo" href="#">VC Scheduels</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" id="index" href="{{url_for('index')}}">Home</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" id="cv" href="{{url_for('cv')}}">VC Charts</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" id="projects" href="{{url_for('projects')}}">Projects</a></li> 
+                </ul>
+        </div>
+        </div>
+    </nav>
+    
+    {% block body %}
+    
+    
+    {% endblock %}
+
+    <footer class="page-footer">
+        <div class="container">
+            <div class="links"><a href="#">About me</a><a href="#">Contact me</a><a href="#">Projects</a></div>
+            <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-instagram-outline"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a></div>
+        </div>
+    </footer>
+    <script src="{{url_for('static', filename = 'assets/js/jquery.js')}}"></script>    
+    <script src="{{url_for('static', filename = 'assets/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename = 'assets/js/scripts.min.js')}}"></script>
+    <script src="{{url_for('static', filename = 'assets/js/jquery.min.js')}}"></script>   
+    <script src="{{url_for('static', filename = 'assets/dataTables/datatables.min.js')}}"></script>   
+    <script src="{{url_for('static', filename = 'assets/dataTables/buttons.print.min.js')}}"></script>   
+    <script src="{{url_for('static', filename = 'assets/dataTables/datatables.buttons.min.js')}}"></script> 
+
+         <!-- <script src="{{url_for('static', filename = 'assets/js/jquery-1.12.js')}}"></script> 
+        <script src="{{url_for('static', filename = 'assets/js/jquery-ui.js')}}"></script>  -->
+    <!-- <script src="{{url_for('static', filename = 'assets/js/sum.js')}}"></script> -->
+  
+    <script>    
+    $( document ).ready(function() {
+        $('#myexample').DataTable({
+            // dom: 'lBfrtip',      to show entries dropdown (10, 25, 50, 100)
+            dom: 'Bfrtip',
+            buttons: [
+                'print'
+            ],          
+          
+            "footerCallback": function(row, data, start, end, display) {
+            var api = this.api();
+            api.columns(6, {
+                page: 'current'
+            }).every(function() {
+                var sum = this
+                .nodes()
+                .reduce(function(a, b) {
+                var x = parseFloat(a) || 0;
+                var y = parseFloat($(b).attr('data-sort')) || 0;
+                return x + y;
+                }, 0);
+                $(this.footer()).html(sum);
+            });
+            }
+        });
+    });   
+    </script>   
+    <script>        
+        $(document).ready(function () {
+        $("#{{request.endpoint}}").parent().addClass("active"); })
+    </script>
+    <script>
+        $(".timepicker").timepicker({
+        showInputs: false
+        });       
+    </script>
+   
+</body>
+
+</html>

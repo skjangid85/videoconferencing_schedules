@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %} VC - Charts {% endblock %}
+
+{% block body %} 
+<main class="page cv-page">
+    
+    <div class="container-fluid">
+        {% if graph %}
+        {{ graph|safe }}
+        {% else %}
+        <p>No graph was provided.</p>
+        {% endif %}
+        </div>
+        <hr>
+    
+       <div class="container-fluid mt-5">
+            {% if graph2 %}
+            {{ graph2|safe }}
+            {% else %}
+            <p>No graph was provided.</p>
+            {% endif %}
+        </div>
+        <hr>
+        
+        <div class="container-fluid mt-5">
+            {% if graph3 %}
+            {{ graph3|safe }}
+            {% else %}
+            <p>No graph was provided.</p>
+            {% endif %}
+        </div>
+    
+{% endblock %}
